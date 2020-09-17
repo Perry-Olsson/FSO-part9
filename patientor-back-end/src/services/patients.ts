@@ -1,4 +1,5 @@
 import patients from '../../data/patients';
+import { toNewPatient } from '../utils/validation';
 
 import { Patient, NonSensitivePatient, NewPatient } from '../types';
 
@@ -18,7 +19,7 @@ const getAllNonSensitive = (): NonSensitivePatient[] =>
 const addNew = (patient: NewPatient): Patient => {
   const newPatient: Patient = {
     id: patients.length.toString(),
-    ...patient,
+    ...toNewPatient(patient),
   };
 
   patients.push(newPatient);
