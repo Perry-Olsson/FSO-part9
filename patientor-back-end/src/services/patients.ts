@@ -1,13 +1,13 @@
 import patients from '../../data/patients';
 import { toNewPatient } from '../utils/validation';
 
-import { Patient, NonSensitivePatient, NewPatient } from '../types';
+import { Patient, PublicPatient, NewPatient } from '../types';
 
 const getAll = (): Patient[] => {
   return patients;
 };
 
-const getAllNonSensitive = (): NonSensitivePatient[] =>
+const getAllPublic = (): PublicPatient[] =>
   patients.map(({ id, dateOfBirth, name, gender, occupation }) => ({
     id,
     name,
@@ -15,6 +15,14 @@ const getAllNonSensitive = (): NonSensitivePatient[] =>
     gender,
     occupation,
   }));
+
+const getOne = (id: string): Patient => {
+  const patient: Patient | undefined = patients.find(
+    patient => patient.id === id
+  );
+  if (!patient) throw new Error('Patient was not found');
+  return patient;
+};
 
 const addNew = (patient: NewPatient): Patient => {
   const newPatient: Patient = {
@@ -28,6 +36,7 @@ const addNew = (patient: NewPatient): Patient => {
 
 export default {
   getAll,
-  getAllNonSensitive,
+  getAllPublic,
+  getOne,
   addNew,
 };
