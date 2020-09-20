@@ -1,4 +1,4 @@
-import { NewPatient, Gender } from '../types';
+import { NewPatient, Gender, Entry, EntryTypes } from '../types';
 
 const parseName = (name: any): string => {
   if (!name || !isString(name)) {
@@ -46,6 +46,16 @@ const parseOccupation = (occ: any): string => {
   return occ;
 };
 
+const parseEntries = (entries: any): Entry[] => {
+  if (!Array.isArray(entries)) throw new Error('Invalid entry format');
+  const entryTypes = Object.values(EntryTypes);
+  entries.forEach((ent: any) => {
+    if (!entryTypes.includes(ent.type))
+      throw new Error(`Invalid entry type ${ent.type}`);
+  });
+  return entries;
+};
+
 export const toNewPatient = (object: any): NewPatient => {
   const newEntry = {
     name: parseName(object.name),
@@ -53,7 +63,7 @@ export const toNewPatient = (object: any): NewPatient => {
     ssn: parseSsn(object.ssn),
     gender: parseGender(object.gender),
     occupation: parseOccupation(object.occupation),
-    entries: object.entries,
+    entries: parseEntries(object.entries),
   };
 
   return newEntry;

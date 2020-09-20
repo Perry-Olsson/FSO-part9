@@ -3,16 +3,16 @@ import patientsService from '../services/patients';
 
 const router = express.Router();
 
-router.get('/', (_, res) => {
-  res.json(patientsService.getAllPublic());
-});
-
 router.get('/:id', (req, res) => {
   try {
     res.json(patientsService.getOne(req.params.id));
   } catch (e) {
     res.status(400).send(e.message);
   }
+});
+
+router.get('/', (_, res) => {
+  res.json(patientsService.getAllPublic());
 });
 
 router.post('/', (req, res) => {
