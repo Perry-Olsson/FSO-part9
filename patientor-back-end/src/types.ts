@@ -7,8 +7,8 @@ interface BaseEntry {
 }
 
 export enum EntryTypes {
-  OccupationalHealthCare = 'OccupationalHealthcare',
-  HealthCheck = 'HealthCheck',
+  OccupationalHealthCare = 'Occupational Healthcare',
+  HealthCheck = 'Health Check',
   Hospital = 'Hospital',
 }
 
