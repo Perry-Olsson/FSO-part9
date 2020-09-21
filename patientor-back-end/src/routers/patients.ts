@@ -3,6 +3,15 @@ import patientsService from '../services/patients';
 
 const router = express.Router();
 
+router.post('/:id/entries', (req, res) => {
+  try {
+    const newEntry = patientsService.addEntry(req.params.id, req.body);
+    res.json(newEntry);
+  } catch (e) {
+    res.status(400).send(e.message);
+  }
+});
+
 router.get('/:id', (req, res) => {
   try {
     res.json(patientsService.getOne(req.params.id));

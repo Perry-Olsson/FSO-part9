@@ -1,63 +1,23 @@
-import { NewPatient, Gender, Entry, EntryTypes } from '../types';
+import { NewPatient, NewBaseEntry, NewEntry } from '../types';
 
-const parseName = (name: any): string => {
-  if (!name || !isString(name)) {
-    throw new Error(`Missing of invalid name: ${name}`);
-  }
-  return name;
-};
-
-const isString = (text: any): text is string => {
-  return typeof text === 'string' || text instanceof String;
-};
-
-const parseDateOfBirth = (dob: any): string => {
-  if (!dob || !isString(dob) || !isDate(dob))
-    throw new Error(`Missing or invalid date of birth: ${dob}`);
-
-  return dob;
-};
-
-const isDate = (date: string): boolean => {
-  return Boolean(Date.parse(date));
-};
-
-const parseSsn = (ssn: any): string => {
-  if (!ssn || !isString(ssn)) throw new Error(`Missin or invalid ssn: ${ssn}`);
-
-  return ssn;
-};
-
-const parseGender = (gender: any): Gender => {
-  if (!gender || !isGender(gender))
-    throw new Error(`Missing or invalid gender: ${gender}`);
-
-  return gender;
-};
-
-const isGender = (param: any): param is Gender => {
-  return Object.values(Gender).includes(param);
-};
-
-const parseOccupation = (occ: any): string => {
-  if (!occ || !isString(occ))
-    throw new Error(`Missing or invalid occupation: ${occ}`);
-
-  return occ;
-};
-
-const parseEntries = (entries: any): Entry[] => {
-  if (!Array.isArray(entries)) throw new Error('Invalid entry format');
-  const entryTypes = Object.values(EntryTypes);
-  entries.forEach((ent: any) => {
-    if (!entryTypes.includes(ent.type))
-      throw new Error(`Invalid entry type ${ent.type}`);
-  });
-  return entries;
-};
+import {
+  parseName,
+  parseDate,
+  parseDateOfBirth,
+  parseDescription,
+  parseDiagnosesCodes,
+  parseDischarge,
+  parseEntries,
+  parseGender,
+  parseHealthCheckRating,
+  parseSsn,
+  parseSpecialist,
+  parseSickLeave,
+  parseOccupation,
+} from './parsers';
 
 export const toNewPatient = (object: any): NewPatient => {
-  const newEntry = {
+  const newPatient = {
     name: parseName(object.name),
     dateOfBirth: parseDateOfBirth(object.dateOfBirth),
     ssn: parseSsn(object.ssn),
@@ -66,5 +26,47 @@ export const toNewPatient = (object: any): NewPatient => {
     entries: parseEntries(object.entries),
   };
 
+  return newPatient;
+};
+
+const createBaseEntry = (entry: any): NewBaseEntry => {
+  const newEntry: NewBaseEntry = {
+    date: parseDate(entry.date),
+    specialist: parseSpecialist(entry.specialist),
+    description: parseDescription(entry.description),
+  };
+  if (entry.diagnosesCodes)
+    newEntry.diagnosesCodes = parseDiagnosesCodes(entry.diagnosesCodes);
   return newEntry;
+};
+
+export const toNewEntry = (entry: any): NewEntry => {
+  switch (entry.type) {
+    case 'Occupational Healthcare': {
+      const newEntry: NewEntry = {
+        type: entry.type,
+        ...createBaseEntry(entry),
+      };
+      if (entry.sickLeave) newEntry.sickLeave = parseSickLeave(entry.sickLeave);
+      return newEntry;
+    }
+    case 'Health Check': {
+      const newEntry: NewEntry = {
+        type: entry.type,
+        ...createBaseEntry(entry),
+        healthCheckRating: parseHealthCheckRating(entry.healthCheckRating),
+      };
+      return newEntry;
+    }
+    case 'Hospital': {
+      const newEntry: NewEntry = {
+        type: entry.type,
+        ...createBaseEntry(entry),
+        discharge: parseDischarge(entry.discharge),
+      };
+      return newEntry;
+    }
+    default:
+      throw new Error(`Invalid entry type ${entry.type}`);
+  }
 };

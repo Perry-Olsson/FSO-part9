@@ -1,7 +1,7 @@
 import patients from '../../data/patients';
-import { toNewPatient } from '../utils/validation';
+import { toNewPatient, toNewEntry } from '../utils/validation';
 
-import { Patient, PublicPatient, NewPatient } from '../types';
+import { Patient, PublicPatient, NewPatient, Entry } from '../types';
 
 const getAll = (): Patient[] => {
   return patients;
@@ -34,9 +34,20 @@ const addNew = (patient: NewPatient): Patient => {
   return newPatient;
 };
 
+const addEntry = (id: string, entry: any): Entry => {
+  const patient: Patient | undefined = patients.find(p => id === p.id);
+  if (!patient) throw new Error(`Patient was not found`);
+  const newEntry: Entry = {
+    id: patient.entries.length.toString(),
+    ...toNewEntry(entry),
+  };
+  return newEntry;
+};
+
 export default {
   getAll,
   getAllPublic,
   getOne,
   addNew,
+  addEntry,
 };
