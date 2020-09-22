@@ -35,8 +35,8 @@ const createBaseEntry = (entry: any): NewBaseEntry => {
     specialist: parseSpecialist(entry.specialist),
     description: parseDescription(entry.description),
   };
-  if (entry.diagnosesCodes)
-    newEntry.diagnosesCodes = parseDiagnosesCodes(entry.diagnosesCodes);
+  if (entry.diagnosisCodes)
+    newEntry.diagnosisCodes = parseDiagnosesCodes(entry.diagnosisCodes);
   return newEntry;
 };
 

@@ -41,6 +41,9 @@ const addEntry = (id: string, entry: any): Entry => {
     id: patient.entries.length.toString(),
     ...toNewEntry(entry),
   };
+
+  patient.entries.push(newEntry);
+  patients.map(p => (p.id === id ? patient : p));
   return newEntry;
 };
 

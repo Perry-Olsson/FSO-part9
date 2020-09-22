@@ -3,7 +3,7 @@ interface BaseEntry {
   date: string;
   specialist: string;
   description: string;
-  diagnosesCodes?: Array<Diagnosis['code']>;
+  diagnosisCodes?: Array<Diagnosis['code']>;
 }
 
 export type NewBaseEntry = Omit<BaseEntry, 'id'>;
